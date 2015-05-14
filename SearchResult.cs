@@ -21,7 +21,8 @@ namespace Jusolink
         public int? page;
         [DataMember]
         public bool? chargeYN;
-
+        [DataMember]
+        public SidoCount sidoCount;
         [DataMember]
         public List<String> deletedWord;
         [DataMember]

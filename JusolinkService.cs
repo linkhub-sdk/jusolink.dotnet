@@ -76,7 +76,7 @@ namespace Jusolink
 
             if (noDiff)
             {
-                url = url + "&noDiff=true";
+                url = url + "&noDifferential=true";
             }
 
             SearchResult response = httpget<SearchResult>(url, null, null);

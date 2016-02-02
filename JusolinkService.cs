@@ -118,8 +118,8 @@ namespace Jusolink
             if (_token != null)
             {
                 DateTime expiration = DateTime.Parse(_token.expiration);
-
-                expired = expiration < DateTime.Now;
+                DateTime now = DateTime.Parse(_LinkhubAuth.getTime());
+                expired = expiration < now;
             }
 
             if (expired)

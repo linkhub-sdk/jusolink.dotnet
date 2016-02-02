@@ -146,26 +146,32 @@ namespace Jusolink
 
             String bearerToken = getSession_Token();
             request.Headers.Add("Authorization", "Bearer" + " " + bearerToken);
-            
+            request.Headers.Add("Accept-Encoding", "gzip, deflate");
+            request.AutomaticDecompression = DecompressionMethods.GZip;
+
             request.Headers.Add("x-api-version", APIVersion);
 
             request.Method = "GET";
 
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream stReadData = response.GetResponseStream();
-
-                return fromJson<T>(stReadData);
-
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (Stream stReadData = response.GetResponseStream())
+                    {
+                        return fromJson<T>(stReadData);
+                    }
+                }
             }
             catch (Exception we)
             {
                 if (we is WebException && ((WebException)we).Response != null)
                 {
-                    Stream stReadData = ((WebException)we).Response.GetResponseStream();
-                    Response t = fromJson<Response>(stReadData);
-                    throw new JusolinkException(t.code, t.message);
+                    using (Stream stReadData = ((WebException)we).Response.GetResponseStream())
+                    {
+                        Response t = fromJson<Response>(stReadData);
+                        throw new JusolinkException(t.code, t.message);
+                    }
                 }
                 throw new JusolinkException(-99999999, we.Message);
             }
@@ -180,6 +186,5 @@ namespace Jusolink
             [DataMember]
             public Single unitCost;
         }
-
     }
 }
